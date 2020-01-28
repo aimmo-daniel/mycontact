@@ -1,9 +1,11 @@
 package com.sj.boot.mycontact.domain;
 
+import com.sj.boot.mycontact.domain.dto.Birthday;
 import lombok.*;
 import org.springframework.data.repository.cdi.Eager;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import java.time.LocalDate;
 
 @Entity
@@ -29,7 +31,11 @@ public class Person {
     @NonNull
     private String bloodType;
 
-    private LocalDate birthday;
+    private String address;
+
+    @Valid
+    @Embedded
+    private Birthday birthday;
 
     private String job;
 
