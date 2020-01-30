@@ -1,8 +1,10 @@
 package com.sj.boot.mycontact.domain;
 
 import com.sj.boot.mycontact.domain.dto.Birthday;
+import com.sj.boot.mycontact.domain.dto.PersonDto;
 import lombok.*;
 import org.springframework.data.repository.cdi.Eager;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -47,11 +49,32 @@ public class Person {
     private String job;
 
     @ToString.Exclude //toString에서 숨기고싶을때
-    private String phonenumber;
+    private String phoneNumber;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Block block;
+
+    public void set(PersonDto personDto) {
+        if(personDto.getAge() != 0) {
+            this.setAge(personDto.getAge());
+        }
+        if(!StringUtils.isEmpty(personDto.getHobby())){
+            this.setHobby(personDto.getHobby());
+        }
+        if(!StringUtils.isEmpty(personDto.getBloodType())) {
+            this.setBloodType(personDto.getBloodType());
+        }
+        if(!StringUtils.isEmpty(personDto.getAddress())) {
+            this.setAddress(personDto.getAddress());
+        }
+        if(!StringUtils.isEmpty(personDto.getJob())) {
+            this.setJob(personDto.getJob());
+        }
+        if(!StringUtils.isEmpty(personDto.getPhoneNumber())) {
+            this.setPhoneNumber(personDto.getPhoneNumber());
+        }
+    }
 
 }
 
