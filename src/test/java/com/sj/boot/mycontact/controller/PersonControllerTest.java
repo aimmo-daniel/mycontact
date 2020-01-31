@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sj.boot.mycontact.controller.dto.PersonDto;
 import com.sj.boot.mycontact.domain.Person;
 import com.sj.boot.mycontact.domain.dto.Birthday;
+import com.sj.boot.mycontact.exception.handler.GlobalExceptionHandler;
 import com.sj.boot.mycontact.repository.PersonRepository;
 import org.apache.tomcat.util.buf.Utf8Encoder;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 
 import java.nio.charset.StandardCharsets;
@@ -36,24 +38,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PersonControllerTest {
 
     @Autowired
-    private PersonController personController;
-
-    @Autowired
     private PersonRepository personRepository;
 
     @Autowired
     ObjectMapper objectMapper;
 
     @Autowired
-    private MappingJackson2HttpMessageConverter messageConverter;
+    private WebApplicationContext wac;
 
     private MockMvc mockMvc;
 
     @BeforeEach
     void beforeEach() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(personController)
-                .setMessageConverters(messageConverter)
+                .webAppContextSetup(wac)
                 .alwaysDo(print())
                 .build();
     }
