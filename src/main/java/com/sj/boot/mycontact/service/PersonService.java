@@ -2,6 +2,8 @@ package com.sj.boot.mycontact.service;
 
 import com.sj.boot.mycontact.domain.Person;
 import com.sj.boot.mycontact.controller.dto.PersonDto;
+import com.sj.boot.mycontact.exception.PersonNotFoundException;
+import com.sj.boot.mycontact.exception.RenameNotPermittedException;
 import com.sj.boot.mycontact.repository.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +40,10 @@ public class PersonService {
 
     @Transactional
     public void modify(Long id, PersonDto personDto) {
-        Person person = personRepository.findById(id).orElseThrow(() -> new RuntimeException("아이디가 존재하지 않습니다."));
+        Person person = personRepository.findById(id).orElseThrow(PersonNotFoundException::new);
 
         if(!person.getName().equals(personDto.getName())) {
-            throw  new RuntimeException("이름이 다릅니다.");
+            throw  new RenameNotPermittedException();
         }
 
         person.set(personDto);
@@ -51,7 +53,7 @@ public class PersonService {
 
     @Transactional
     public void modify(Long id, String name) {
-        Person person = personRepository.findById(id).orElseThrow(() -> new RuntimeException("아이디가 존재하지 않습니다."));
+        Person person = personRepository.findById(id).orElseThrow(PersonNotFoundException::new);
 
         person.setName(name);
 
@@ -60,7 +62,7 @@ public class PersonService {
 
     @Transactional
     public void delete(Long id) {
-        Person person = personRepository.findById(id).orElseThrow(() -> new RuntimeException("아이디가 존재하지 않습니다."));
+        Person person = personRepository.findById(id).orElseThrow(PersonNotFoundException::new);
 
         // 데이터를 직접 삭제하지 않고 삭제상태 컬럼을 업데이트
         person.setDeleted(true);
