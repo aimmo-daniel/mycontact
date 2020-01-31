@@ -1,0 +1,62 @@
+-JPA
+    - Entity 생성
+    - @OneToOne Relation
+        - CascadeType
+        - FetchType
+        - Optional, orphanRemoval
+    - QueryMethod
+        - @Embedded
+        - @Valid
+        - @Query
+        - @Where (for Soft-Delete)
+        - Data.sql
+
+-SpringMVC
+    - @GetMapping
+    - @PostMapping
+    - @PutMapping
+    - @PatchMapping
+    - @DeleteMapping
+    - @PathVariable
+    - @RequestBody
+
+-Lombok
+    - @Getter
+    - @Setter
+    - @ToString
+    - @Constructor
+    - @EqualsAndHashCode
+    - @Data
+
+-SpringTest
+
+-Java8
+    - Stream
+    - Filter
+    - Map
+
+-SpringMVC
+    - CustomJsonSerializer
+
+-SpringTest
+    - MockMvc Test
+    - Matcher
+    - Junit5
+
+-MockTest
+    - Mockito
+    - CustomArgumentMatcher
+
+-Exception Handling
+    - CustomException
+    - ExceptionHandler
+    - GlobalExceptionHandler
+
+-Parameter Validator
+    - @NotEmpty
+    - @NotBlank
+    - @Valid
+
+-Paging
+    - Pageable
+    - Page<T>
