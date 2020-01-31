@@ -20,16 +20,6 @@ class PersonServiceTest {
     }
 
     @Test
-    void getPeopleExcludeBlocks() {
-        List<Person> people = personService.getPeopleExcludeBlocks();
-
-        assertThat(people.size()).isEqualTo(3);
-        assertThat(people.get(0).getName()).isEqualTo("martin");
-        assertThat(people.get(1).getName()).isEqualTo("david");
-        assertThat(people.get(2).getName()).isEqualTo("benny");
-    }
-
-    @Test
     void getPeopleByName() {
         List<Person> person = personService.getPeopleByName("martin");
 

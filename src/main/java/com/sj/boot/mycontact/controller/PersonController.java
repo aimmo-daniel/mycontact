@@ -1,7 +1,7 @@
 package com.sj.boot.mycontact.controller;
 
 import com.sj.boot.mycontact.domain.Person;
-import com.sj.boot.mycontact.domain.dto.PersonDto;
+import com.sj.boot.mycontact.controller.dto.PersonDto;
 import com.sj.boot.mycontact.repository.PersonRepository;
 import com.sj.boot.mycontact.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
