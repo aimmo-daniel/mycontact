@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,7 +24,7 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @Transactional
@@ -39,18 +40,34 @@ class PersonControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    private MappingJackson2HttpMessageConverter messageConverter;
+
     private MockMvc mockMvc;
 
     @BeforeEach
     void beforeEach() {
-        mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(personController).setMessageConverters(messageConverter).build();
     }
 
     @Test
     void getPerson() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/person/1"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("martin"))
+                .andExpect(jsonPath("$.hobby").isEmpty())
+                .andExpect(jsonPath("$.address").isEmpty())
+                .andExpect(jsonPath("$.birthday").value("1991-08-15"))
+                .andExpect(jsonPath("$.job").isEmpty())
+                .andExpect(jsonPath("$.phoneNumber").isEmpty())
+                .andExpect(jsonPath("$.deleted").value(false))
+                .andExpect(jsonPath("$.age").isNumber())
+                .andExpect(jsonPath("$.birthdayToday").isBoolean());
+
+        // 동일한 검증 (Json, 자바)
+        //jsonPath("$.name").value("martin");
+        //assertThat(result.getName()).isEqualTo("martin");
     }
 
     @Test
