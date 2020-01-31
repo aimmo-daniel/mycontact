@@ -6,10 +6,14 @@ import com.sj.boot.mycontact.repository.PersonRepository;
 import com.sj.boot.mycontact.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequestMapping(value = "/api/person")
 @RestController
@@ -19,8 +23,10 @@ public class PersonController {
     @Autowired
     PersonService personService;
 
-    @Autowired
-    PersonRepository personRepository;
+    @GetMapping
+    public Page<Person> getAll(@PageableDefault(page = 0, size = 2) Pageable pageable) {
+        return personService.getAll(pageable);
+    }
 
     @GetMapping("/{id}")
     public Person getPerson(@PathVariable Long id) {
