@@ -21,7 +21,7 @@ class PersonRepositoryTest {
 
     @Test
     void crud() {
-        Person person = Person.builder().name("john").age(10).bloodType("A").build();
+        Person person = Person.builder().name("john").bloodType("A").build();
 
         personRepository.save(person);
 
@@ -29,7 +29,6 @@ class PersonRepositoryTest {
 
         assertThat(people.size()).isEqualTo(1);
         assertThat(people.get(0).getName()).isEqualTo("john");
-        assertThat(people.get(0).getAge()).isEqualTo(10);
         assertThat(people.get(0).getBloodType()).isEqualTo("A");
     }
 
@@ -51,15 +50,5 @@ class PersonRepositoryTest {
         assertThat(people.get(1).getName()).isEqualTo("benny");
     }
 
-    private void givenPerson(String name, int age, String bloodType) {
-        givenPerson(name, age, bloodType, null);
-    }
-
-    private void givenPerson(String name, int age, String bloodType, LocalDate birthday) {
-        Person person = new Person(name, age, bloodType);
-        person.setBirthday(new Birthday(birthday));
-
-        personRepository.save(person);
-    }
 
 }
