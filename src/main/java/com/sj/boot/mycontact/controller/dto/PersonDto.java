@@ -1,13 +1,13 @@
 package com.sj.boot.mycontact.controller.dto;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
+@Builder
+@AllArgsConstructor(staticName = "of")
+@NoArgsConstructor
 @Data
-@Getter @Setter
 public class PersonDto {
 
     private String name;
