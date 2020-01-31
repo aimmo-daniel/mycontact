@@ -3,6 +3,8 @@ package com.sj.boot.mycontact.domain;
 import com.sj.boot.mycontact.domain.dto.Birthday;
 import com.sj.boot.mycontact.domain.dto.PersonDto;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Where;
 import org.springframework.data.repository.cdi.Eager;
 import org.springframework.util.StringUtils;
 
@@ -18,6 +20,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Builder
 @Data
+@Where(clause = "deleted = false") //deleted false 인것만 노출
 public class Person {
 
     @Id
@@ -50,6 +53,9 @@ public class Person {
 
     @ToString.Exclude //toString에서 숨기고싶을때
     private String phoneNumber;
+
+    @ColumnDefault("0") // 0 = false
+    private boolean deleted; // 삭제 여부
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
