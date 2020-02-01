@@ -6,15 +6,13 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Data
 @Builder
 public class Group {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String description;

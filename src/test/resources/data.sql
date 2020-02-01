@@ -6,3 +6,9 @@ insert into person (`id`, `name`, `year_of_birthday`, `month_of_birthday`, `day_
 insert into person (`id`, `name`, `year_of_birthday`, `month_of_birthday`, `day_of_birthday`, `job`, `hobby`, `phone_number`, `address`)
     values(6, 'tony', 1991, 7, 10, 'officer', 'reading', '010-2222-5555', '서울');
 insert into person (`id`, `name`, `deleted`) values(7, 'andrew', true);
+
+insert into group_table (`id`, `description`) values (1, 'SAMSUNG');
+insert into group_table (`id`, `description`) values (2, 'HYUNDAI');
+insert into group_table (`id`, `description`) values (3, 'LG');
+insert into group_table (`id`, `description`) values (4, 'NONGSIM');
+insert into group_table (`id`, `description`) values (5, 'HANHWA');

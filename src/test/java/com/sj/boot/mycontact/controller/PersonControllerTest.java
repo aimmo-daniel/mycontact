@@ -1,39 +1,32 @@
 package com.sj.boot.mycontact.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.json.UTF8DataInputJsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sj.boot.mycontact.controller.dto.PersonDto;
 import com.sj.boot.mycontact.domain.Person;
 import com.sj.boot.mycontact.domain.dto.Birthday;
-import com.sj.boot.mycontact.exception.handler.GlobalExceptionHandler;
 import com.sj.boot.mycontact.repository.PersonRepository;
-import org.apache.tomcat.util.buf.Utf8Encoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.util.NestedServletException;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @Transactional
@@ -60,7 +53,7 @@ class PersonControllerTest {
 
     @Test
     void getAll() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/person")
+        mockMvc.perform(get("/api/person")
                     .param("page", "1")
                     .param("size","2"))
                 .andExpect(status().isOk())
@@ -73,7 +66,7 @@ class PersonControllerTest {
 
     @Test
     void getPerson() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/person/1"))
+        mockMvc.perform(get("/api/person/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("martin"))
                 .andExpect(jsonPath("$.hobby").isEmpty())
@@ -94,7 +87,7 @@ class PersonControllerTest {
     void postPerson() throws Exception {
         PersonDto dto = PersonDto.of("martin", "programming", "판교", LocalDate.now(), "programmer", "010-1111-2222");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/person")
+        mockMvc.perform(post("/api/person")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJsonString(dto)))
                 .andExpect(status().isCreated());
@@ -114,7 +107,7 @@ class PersonControllerTest {
     void postPersonIfNameIsNull() throws Exception {
         PersonDto dto = new PersonDto();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/person")
+        mockMvc.perform(post("/api/person")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJsonString(dto)))
                 .andExpect(status().isBadRequest())
@@ -127,7 +120,7 @@ class PersonControllerTest {
         PersonDto dto = new PersonDto();
         dto.setName("");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/person")
+        mockMvc.perform(post("/api/person")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJsonString(dto)))
                 .andExpect(status().isBadRequest())
@@ -140,7 +133,7 @@ class PersonControllerTest {
         PersonDto dto = new PersonDto();
         dto.setName("");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/person")
+        mockMvc.perform(post("/api/person")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJsonString(dto)))
                 .andExpect(status().isBadRequest())
@@ -159,7 +152,7 @@ class PersonControllerTest {
                 .phoneNumber("010-1111-2222")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/person/1")
+        mockMvc.perform(put("/api/person/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJsonString(dto)))
                 .andExpect(status().isOk());
@@ -180,7 +173,7 @@ class PersonControllerTest {
     void modifyPersonIfNameIsDifferent() throws Exception {
         PersonDto dto = PersonDto.of("james", "programming", "판교", LocalDate.now(), "programmer", "010-1111-2222");
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/person/1")
+        mockMvc.perform(put("/api/person/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJsonString(dto)))
                 .andExpect(status().isBadRequest())
@@ -192,8 +185,7 @@ class PersonControllerTest {
     void modifyPersonIfPersonNotFound() throws Exception {
         PersonDto dto = PersonDto.of("martin", "programming", "판교", LocalDate.now(), "programmer", "010-1111-2222");
 
-        mockMvc.perform(
-                MockMvcRequestBuilders.patch("/api/person/10")
+        mockMvc.perform(patch("/api/person/10")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJsonString(dto)))
                 .andExpect(status().isBadRequest())
@@ -203,7 +195,7 @@ class PersonControllerTest {
 
     @Test
     void modifyName() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/person/1")
+        mockMvc.perform(patch("/api/person/1")
                 .param("name", "martinModified"))
                 .andExpect(status().isOk());
 
@@ -212,7 +204,7 @@ class PersonControllerTest {
 
     @Test
     void deletePerson() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/person/1"))
+        mockMvc.perform(delete("/api/person/1"))
                 .andExpect(status().isOk());
 
         assertTrue(personRepository.findPeopleDeleted().stream().anyMatch(person -> person.getId().equals(1L)));
